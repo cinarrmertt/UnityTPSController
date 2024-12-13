@@ -403,6 +403,43 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1182674916 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2881028701356728494, guid: 6aad46daf73e87f469d851a3879860e2, type: 3}
+  m_PrefabInstance: {fileID: 1362869303}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1182674917
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1182674916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: adbe63b11b3498e46a9bc61bed41d419, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animator: {fileID: 1182674922}
+  locomotionBlendSpeed: 4
+--- !u!114 &1182674918
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1182674916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1294692018d110742b165edeba045968, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <CurrentPlayerMovementState>k__BackingField: 0
+--- !u!95 &1182674922 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 3595003473974449630, guid: 6aad46daf73e87f469d851a3879860e2, type: 3}
+  m_PrefabInstance: {fileID: 1362869303}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1362869303
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -456,9 +493,21 @@ PrefabInstance:
       value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 4800299973890086125, guid: 6aad46daf73e87f469d851a3879860e2, type: 3}
+      propertyPath: drag
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 4800299973890086125, guid: 6aad46daf73e87f469d851a3879860e2, type: 3}
       propertyPath: _playerCamera
       value: 
       objectReference: {fileID: 425198555}
+    - target: {fileID: 4800299973890086125, guid: 6aad46daf73e87f469d851a3879860e2, type: 3}
+      propertyPath: runAcceleration
+      value: 35
+      objectReference: {fileID: 0}
+    - target: {fileID: 4800299973890086125, guid: 6aad46daf73e87f469d851a3879860e2, type: 3}
+      propertyPath: sprintAcceleration
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 9154910384004660390, guid: 6aad46daf73e87f469d851a3879860e2, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -504,6 +553,12 @@ PrefabInstance:
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2881028701356728494, guid: 6aad46daf73e87f469d851a3879860e2, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1182674918}
+    - targetCorrespondingSourceObject: {fileID: 2881028701356728494, guid: 6aad46daf73e87f469d851a3879860e2, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1182674917}
     - targetCorrespondingSourceObject: {fileID: 6664088316966014145, guid: 6aad46daf73e87f469d851a3879860e2, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1402288759}

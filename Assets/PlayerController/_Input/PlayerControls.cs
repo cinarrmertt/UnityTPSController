@@ -47,6 +47,15 @@ namespace MTProject.PlayerController
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Sprint"",
+                    ""type"": ""Button"",
+                    ""id"": ""995496f6-133d-4c7b-a5ff-a7ec39634f5a"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -115,6 +124,17 @@ namespace MTProject.PlayerController
                     ""action"": ""Look"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e04b8e63-0498-4b48-907b-2c9c17249096"",
+                    ""path"": ""<Keyboard>/leftShift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Sprint"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -125,6 +145,7 @@ namespace MTProject.PlayerController
             m_PlayerLocomotionMap = asset.FindActionMap("PlayerLocomotionMap", throwIfNotFound: true);
             m_PlayerLocomotionMap_Move = m_PlayerLocomotionMap.FindAction("Move", throwIfNotFound: true);
             m_PlayerLocomotionMap_Look = m_PlayerLocomotionMap.FindAction("Look", throwIfNotFound: true);
+            m_PlayerLocomotionMap_Sprint = m_PlayerLocomotionMap.FindAction("Sprint", throwIfNotFound: true);
         }
 
         ~@PlayerControls()
@@ -193,12 +214,14 @@ namespace MTProject.PlayerController
         private List<IPlayerLocomotionMapActions> m_PlayerLocomotionMapActionsCallbackInterfaces = new List<IPlayerLocomotionMapActions>();
         private readonly InputAction m_PlayerLocomotionMap_Move;
         private readonly InputAction m_PlayerLocomotionMap_Look;
+        private readonly InputAction m_PlayerLocomotionMap_Sprint;
         public struct PlayerLocomotionMapActions
         {
             private @PlayerControls m_Wrapper;
             public PlayerLocomotionMapActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
             public InputAction @Move => m_Wrapper.m_PlayerLocomotionMap_Move;
             public InputAction @Look => m_Wrapper.m_PlayerLocomotionMap_Look;
+            public InputAction @Sprint => m_Wrapper.m_PlayerLocomotionMap_Sprint;
             public InputActionMap Get() { return m_Wrapper.m_PlayerLocomotionMap; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -214,6 +237,9 @@ namespace MTProject.PlayerController
                 @Look.started += instance.OnLook;
                 @Look.performed += instance.OnLook;
                 @Look.canceled += instance.OnLook;
+                @Sprint.started += instance.OnSprint;
+                @Sprint.performed += instance.OnSprint;
+                @Sprint.canceled += instance.OnSprint;
             }
 
             private void UnregisterCallbacks(IPlayerLocomotionMapActions instance)
@@ -224,6 +250,9 @@ namespace MTProject.PlayerController
                 @Look.started -= instance.OnLook;
                 @Look.performed -= instance.OnLook;
                 @Look.canceled -= instance.OnLook;
+                @Sprint.started -= instance.OnSprint;
+                @Sprint.performed -= instance.OnSprint;
+                @Sprint.canceled -= instance.OnSprint;
             }
 
             public void RemoveCallbacks(IPlayerLocomotionMapActions instance)
@@ -245,6 +274,7 @@ namespace MTProject.PlayerController
         {
             void OnMove(InputAction.CallbackContext context);
             void OnLook(InputAction.CallbackContext context);
+            void OnSprint(InputAction.CallbackContext context);
         }
     }
 }

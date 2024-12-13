@@ -6,6 +6,9 @@ namespace MTProject.PlayerController
 {
     public class PlayerLocomotionInput : MonoBehaviour,PlayerControls.IPlayerLocomotionMapActions
     {
+        [SerializeField] private bool holdToSprint=true; //shifte basıyorsa
+
+        public bool SprintToggleOn { get; private set; }
         public PlayerControls PlayerControls { get; private set; }
         public Vector2 MoveInput { get; private set; }
         public Vector2 LookInput { get; private set; }
@@ -34,6 +37,18 @@ namespace MTProject.PlayerController
         public void OnLook(InputAction.CallbackContext context)
         {
             LookInput = context.ReadValue<Vector2>();
+        }
+
+        public void OnSprint(InputAction.CallbackContext context)
+        {
+            if (context.performed)
+            {
+                SprintToggleOn = holdToSprint || !SprintToggleOn;//şuan da sprint yapmıyosak veya sprint tuşuna basabiliyorsak
+            }
+            else if (context.canceled)
+            {
+                SprintToggleOn = !holdToSprint && SprintToggleOn;//şuan da sprint yapıyosak ve sprint tuşuna basamıyorsak
+            }
         }
     }
 }
