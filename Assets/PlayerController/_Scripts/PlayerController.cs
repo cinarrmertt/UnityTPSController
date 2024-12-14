@@ -16,6 +16,8 @@ namespace MTProject.PlayerController
         public float sprintAcceleration=0.5f;
         public float sprintSpeed = 7f;
         public float drag = .1f;
+        public float gravity = 25;
+        public float jumpPower = 1;
         public float movingThreshold = .01f;
 
         [Header("CameraSettings")] public float lookSensivityH = .1f;
@@ -26,6 +28,8 @@ namespace MTProject.PlayerController
         private PlayerState _playerState;
         private Vector2 _cameraRotation = Vector2.zero; //mevcut kamera ve oyuncu konumu
         private Vector2 _playerTargetRotation = Vector2.zero;
+
+        private float _verticalVelocity = 0;
         
         #endregion
 
@@ -41,6 +45,7 @@ namespace MTProject.PlayerController
         private void Update()
         {
             UpdatePlayerState();
+            HandleVerticalMovement();
             HandleLateralMovement();
         }
         #endregion
@@ -49,17 +54,41 @@ namespace MTProject.PlayerController
             bool isMovementInput = _playerLocomotionInput.MoveInput != Vector2.zero;//input girişi var mı yok mu?
             bool isMovingLaterally = IsMovingLaterally();//hareket var mı?
             bool isSprinting = _playerLocomotionInput.SprintToggleOn && isMovingLaterally;
+            bool isGrounded = IsGrounded();
 
             PlayerMovementState lateralState = isSprinting?PlayerMovementState.Sprinting:
                 isMovingLaterally || isMovementInput
                 ? PlayerMovementState.Running
                 : PlayerMovementState.Idling;
             _playerState.SetPlayerMovementState(lateralState);
+
+            if (!isGrounded&&_characterController.velocity.y >= 0f)//yerde değil ve yukarı doğru hızlanıyor ise
+            {
+                _playerState.SetPlayerMovementState(PlayerMovementState.Jumping);
+            }
+            else if (!isGrounded&&_characterController.velocity.y < 0)//yerde değil ama aşağı doğru gidiyor ise
+            {
+                _playerState.SetPlayerMovementState(PlayerMovementState.Falling);
+            }
         }
 
+        private void HandleVerticalMovement()
+        {
+            bool isGrounded = _playerState.InGroundedState();
+
+            if (isGrounded && _verticalVelocity < 0)
+                _verticalVelocity = 0;
+
+            _verticalVelocity -= gravity * Time.deltaTime;
+            if (isGrounded&&_playerLocomotionInput.JumpPressed)
+            {
+                _verticalVelocity += Mathf.Sqrt(jumpPower * 3 * gravity);
+            }
+        }
         private void HandleLateralMovement()
         {
             bool isSprinting = _playerState.CurrentPlayerMovementState == PlayerMovementState.Sprinting;
+            bool isGrounded = _playerState.InGroundedState();
             
             float lateralAcceleration = isSprinting ? sprintAcceleration : runAcceleration;
             float clampLateralAcceleration = isSprinting ? sprintSpeed : runSpeed;
@@ -80,6 +109,7 @@ namespace MTProject.PlayerController
             newVelocity = (newVelocity.magnitude > drag * Time.deltaTime) ? newVelocity - currentDrag : Vector3.zero;
             //sürtünmeyle birlikte yeni hızımız
             newVelocity = Vector3.ClampMagnitude(newVelocity, clampLateralAcceleration); //yeni hızı runspeed ile çarptık
+            newVelocity.y += _verticalVelocity;
 
             _characterController.Move(newVelocity * Time.deltaTime);
         }
@@ -96,12 +126,15 @@ namespace MTProject.PlayerController
 
             _playerCamera.transform.rotation = Quaternion.Euler(_cameraRotation.y, _cameraRotation.x, 0);
         }
-
         public bool IsMovingLaterally()
         {
             Vector3 lateralVelocity = new Vector3(_characterController.velocity.x, 0, _characterController.velocity.y);//yanal hareketin hızı
             return lateralVelocity.magnitude > movingThreshold;
 
+        } 
+        public bool IsGrounded()
+        {
+            return _characterController.isGrounded;
         }
     }
 }

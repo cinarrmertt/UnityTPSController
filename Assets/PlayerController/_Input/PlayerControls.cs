@@ -56,6 +56,15 @@ namespace MTProject.PlayerController
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Jump"",
+                    ""type"": ""Button"",
+                    ""id"": ""8683ac1f-b48c-4b21-ae12-08e79d243dc6"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -135,6 +144,17 @@ namespace MTProject.PlayerController
                     ""action"": ""Sprint"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d8da7fa6-a085-4cf7-8576-fb1888523f78"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -146,6 +166,7 @@ namespace MTProject.PlayerController
             m_PlayerLocomotionMap_Move = m_PlayerLocomotionMap.FindAction("Move", throwIfNotFound: true);
             m_PlayerLocomotionMap_Look = m_PlayerLocomotionMap.FindAction("Look", throwIfNotFound: true);
             m_PlayerLocomotionMap_Sprint = m_PlayerLocomotionMap.FindAction("Sprint", throwIfNotFound: true);
+            m_PlayerLocomotionMap_Jump = m_PlayerLocomotionMap.FindAction("Jump", throwIfNotFound: true);
         }
 
         ~@PlayerControls()
@@ -215,6 +236,7 @@ namespace MTProject.PlayerController
         private readonly InputAction m_PlayerLocomotionMap_Move;
         private readonly InputAction m_PlayerLocomotionMap_Look;
         private readonly InputAction m_PlayerLocomotionMap_Sprint;
+        private readonly InputAction m_PlayerLocomotionMap_Jump;
         public struct PlayerLocomotionMapActions
         {
             private @PlayerControls m_Wrapper;
@@ -222,6 +244,7 @@ namespace MTProject.PlayerController
             public InputAction @Move => m_Wrapper.m_PlayerLocomotionMap_Move;
             public InputAction @Look => m_Wrapper.m_PlayerLocomotionMap_Look;
             public InputAction @Sprint => m_Wrapper.m_PlayerLocomotionMap_Sprint;
+            public InputAction @Jump => m_Wrapper.m_PlayerLocomotionMap_Jump;
             public InputActionMap Get() { return m_Wrapper.m_PlayerLocomotionMap; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -240,6 +263,9 @@ namespace MTProject.PlayerController
                 @Sprint.started += instance.OnSprint;
                 @Sprint.performed += instance.OnSprint;
                 @Sprint.canceled += instance.OnSprint;
+                @Jump.started += instance.OnJump;
+                @Jump.performed += instance.OnJump;
+                @Jump.canceled += instance.OnJump;
             }
 
             private void UnregisterCallbacks(IPlayerLocomotionMapActions instance)
@@ -253,6 +279,9 @@ namespace MTProject.PlayerController
                 @Sprint.started -= instance.OnSprint;
                 @Sprint.performed -= instance.OnSprint;
                 @Sprint.canceled -= instance.OnSprint;
+                @Jump.started -= instance.OnJump;
+                @Jump.performed -= instance.OnJump;
+                @Jump.canceled -= instance.OnJump;
             }
 
             public void RemoveCallbacks(IPlayerLocomotionMapActions instance)
@@ -275,6 +304,7 @@ namespace MTProject.PlayerController
             void OnMove(InputAction.CallbackContext context);
             void OnLook(InputAction.CallbackContext context);
             void OnSprint(InputAction.CallbackContext context);
+            void OnJump(InputAction.CallbackContext context);
         }
     }
 }

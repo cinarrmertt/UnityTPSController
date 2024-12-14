@@ -12,6 +12,7 @@ namespace MTProject.PlayerController
         public PlayerControls PlayerControls { get; private set; }
         public Vector2 MoveInput { get; private set; }
         public Vector2 LookInput { get; private set; }
+        public bool JumpPressed { get; private set; }
 
         private void OnEnable()
         {
@@ -26,6 +27,11 @@ namespace MTProject.PlayerController
         {
             PlayerControls.PlayerLocomotionMap.Disable();
             PlayerControls.PlayerLocomotionMap.RemoveCallbacks(this);
+        }
+
+        private void LateUpdate()
+        {
+            JumpPressed = false;
         }
 
         public void OnMove(InputAction.CallbackContext context)
@@ -49,6 +55,14 @@ namespace MTProject.PlayerController
             {
                 SprintToggleOn = !holdToSprint && SprintToggleOn;//şuan da sprint yapıyosak ve sprint tuşuna basamıyorsak
             }
+        }
+
+        public void OnJump(InputAction.CallbackContext context)
+        {
+            if (!context.performed)
+                return;
+
+            JumpPressed = true;
         }
     }
 }
