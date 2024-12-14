@@ -2065,8 +2065,10 @@ GameObject:
   - component: {fileID: 9154910384004660390}
   - component: {fileID: 3595003473974449630}
   - component: {fileID: 5849293678462033875}
-  - component: {fileID: 4800299973890086125}
-  - component: {fileID: 3740718999137062359}
+  - component: {fileID: 926024374028319436}
+  - component: {fileID: 8446153882979603270}
+  - component: {fileID: 4242700717117033880}
+  - component: {fileID: 1106239854002882247}
   m_Layer: 0
   m_Name: TPS_Player
   m_TagString: Untagged
@@ -2104,7 +2106,7 @@ Animator:
   m_GameObject: {fileID: 2881028701356728494}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: de13a7420582ded45a8d7d3f96889aca, type: 3}
-  m_Controller: {fileID: 9100000, guid: f38aab3517d8d59458ac2ac0e06c28c6, type: 2}
+  m_Controller: {fileID: 9100000, guid: 4c099c8a3a675a84782bc6c481e82d03, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -2138,10 +2140,10 @@ CharacterController:
   m_Radius: 0.3
   m_SlopeLimit: 45
   m_StepOffset: 0.3
-  m_SkinWidth: 0.08
+  m_SkinWidth: 0.0001
   m_MinMoveDistance: 0.00001
   m_Center: {x: 0, y: 1, z: 0}
---- !u!114 &4800299973890086125
+--- !u!114 &926024374028319436
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2150,18 +2152,40 @@ MonoBehaviour:
   m_GameObject: {fileID: 2881028701356728494}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0c8a85747e0e34d43ad2f87b1e64989c, type: 3}
+  m_Script: {fileID: 11500000, guid: 490eb3a69b8a8cf4b8d8cf676effd1b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  holdToSprint: 1
+--- !u!114 &8446153882979603270
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2881028701356728494}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19bdf25b8aaee6f4eb5183b1290dacea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _characterController: {fileID: 5849293678462033875}
   _playerCamera: {fileID: 7486339738184965495}
-  runAcceleration: 50
+  walkAcceleration: 25
+  walkSpeed: 2
+  runAcceleration: 35
   runSpeed: 4
-  drag: 30
-  lookSensivityH: 0.1
-  lookSensivityV: 0.1
-  lookLimitV: 60
---- !u!114 &3740718999137062359
+  sprintAcceleration: 50
+  sprintSpeed: 7
+  drag: 20
+  gravity: 25
+  jumpSpeed: 1
+  movingThreshold: 0.01
+  playerModelRotationSpeed: 10
+  rotateToTargetTime: 0.67
+  lookSenseH: 0.1
+  lookSenseV: 0.1
+  lookLimitV: 30
+--- !u!114 &4242700717117033880
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2170,9 +2194,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 2881028701356728494}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 780ad66093bf458488cafcaa251fb900, type: 3}
+  m_Script: {fileID: 11500000, guid: d015a2dfbd3791849a8c184d57c68c14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _animator: {fileID: 3595003473974449630}
+  locomotionBlendSpeed: 4
+--- !u!114 &1106239854002882247
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2881028701356728494}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2df51a1f55ede10459f5411060f1667f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <CurrentPlayerMovementState>k__BackingField: 0
 --- !u!1 &2923137057403147604
 GameObject:
   m_ObjectHideFlags: 0
@@ -5177,7 +5216,7 @@ GameObject:
   - component: {fileID: 2520346308033917113}
   - component: {fileID: 2442989693073805271}
   - component: {fileID: 6854009145139361698}
-  - component: {fileID: 5134442412636028771}
+  - component: {fileID: 911248140998908378}
   m_Layer: 0
   m_Name: CinemachineCamera
   m_TagString: Untagged
@@ -5269,7 +5308,7 @@ MonoBehaviour:
     CameraRadius: 0.2
     DampingIntoCollision: 0
     DampingFromCollision: 0.5
---- !u!114 &5134442412636028771
+--- !u!114 &911248140998908378
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

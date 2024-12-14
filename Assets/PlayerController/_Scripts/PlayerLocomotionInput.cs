@@ -1,24 +1,30 @@
-using System;
+using System.Collections;
+using System.Collections.Generic;
+using MTProject.PlayerController;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace MTProject.PlayerController
 {
-    public class PlayerLocomotionInput : MonoBehaviour,PlayerControls.IPlayerLocomotionMapActions
+    [DefaultExecutionOrder(-2)]
+    public class PlayerLocomotionInput : MonoBehaviour, PlayerControls.IPlayerLocomotionMapActions
     {
-        [SerializeField] private bool holdToSprint=true; //shifte basıyorsa
-
-        public bool SprintToggleOn { get; private set; }
+        #region Class Variables
+        [SerializeField] private bool holdToSprint = true;
         public PlayerControls PlayerControls { get; private set; }
-        public Vector2 MoveInput { get; private set; }
+        public Vector2 MovementInput { get; private set; }
         public Vector2 LookInput { get; private set; }
         public bool JumpPressed { get; private set; }
+        public bool SprintToggledOn { get; private set; }
+        public bool WalkToggledOn { get; private set; }
+        #endregion
 
+        #region Startup
         private void OnEnable()
         {
             PlayerControls = new PlayerControls();
             PlayerControls.Enable();
-            
+
             PlayerControls.PlayerLocomotionMap.Enable();
             PlayerControls.PlayerLocomotionMap.SetCallbacks(this);
         }
@@ -28,16 +34,20 @@ namespace MTProject.PlayerController
             PlayerControls.PlayerLocomotionMap.Disable();
             PlayerControls.PlayerLocomotionMap.RemoveCallbacks(this);
         }
+        #endregion
 
+        #region Late Update Logic
         private void LateUpdate()
         {
             JumpPressed = false;
         }
+        #endregion
 
-        public void OnMove(InputAction.CallbackContext context)
+        #region Input Callbacks
+        public void OnMovement(InputAction.CallbackContext context)
         {
-            MoveInput = context.ReadValue<Vector2>();
-            print(MoveInput);
+            MovementInput = context.ReadValue<Vector2>();
+            print(MovementInput);
         }
 
         public void OnLook(InputAction.CallbackContext context)
@@ -49,11 +59,11 @@ namespace MTProject.PlayerController
         {
             if (context.performed)
             {
-                SprintToggleOn = holdToSprint || !SprintToggleOn;//şuan da sprint yapmıyosak veya sprint tuşuna basabiliyorsak
+                SprintToggledOn = holdToSprint || !SprintToggledOn;
             }
             else if (context.canceled)
             {
-                SprintToggleOn = !holdToSprint && SprintToggleOn;//şuan da sprint yapıyosak ve sprint tuşuna basamıyorsak
+                SprintToggledOn = !holdToSprint && SprintToggledOn;
             }
         }
 
@@ -64,6 +74,14 @@ namespace MTProject.PlayerController
 
             JumpPressed = true;
         }
+
+        public void OnToggleWalk(InputAction.CallbackContext context)
+        {
+            if (!context.performed)
+                return;
+
+            WalkToggledOn = !WalkToggledOn;
+        }
+        #endregion
     }
 }
-
