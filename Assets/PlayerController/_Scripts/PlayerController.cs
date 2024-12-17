@@ -52,6 +52,8 @@ namespace MTProject.PlayerController
         private float _verticalVelocity = 0f;
         private float _antiBump;
         private float _stepOffSet;
+
+        private PlayerMovementState _lastMovementState = PlayerMovementState.Falling;
         
         #endregion
 
@@ -76,6 +78,8 @@ namespace MTProject.PlayerController
 
         private void UpdateMovementState()
         {
+            _lastMovementState = _playerState.CurrentPlayerMovementState;
+            
             bool canRun = CanRun();
             bool isMovementInput = _playerLocomotionInput.MovementInput != Vector2.zero;             //order
             bool isMovingLaterally = IsMovingLaterally();                                            //matters
@@ -119,10 +123,14 @@ namespace MTProject.PlayerController
 
             if (_playerLocomotionInput.JumpPressed && isGrounded)
             {
-                _verticalVelocity += _antiBump+Mathf.Sqrt(jumpSpeed * 3 * gravity);
+                _verticalVelocity += Mathf.Sqrt(jumpSpeed * 3 * gravity);
                 _jumpedLastFrame = true;
             }
-            
+
+            if (_playerState.IsStateGroundedState(_lastMovementState)&& !isGrounded)
+            {
+                _verticalVelocity += _antiBump;
+            }
         }
 
         private void HandleLateralMovement()
@@ -153,11 +161,24 @@ namespace MTProject.PlayerController
             newVelocity = (newVelocity.magnitude > drag * Time.deltaTime) ? newVelocity - currentDrag : Vector3.zero;
             newVelocity = Vector3.ClampMagnitude(new Vector3(newVelocity.x,0,newVelocity.z), clampLateralMagnitude);
             newVelocity.y += _verticalVelocity;
+            newVelocity = !isGrounded ? HandleSteepWalls(newVelocity) : newVelocity;
 
             // Move character (Unity suggests only calling this once per tick)
             _characterController.Move(newVelocity * Time.deltaTime);
         }
         #endregion
+        
+        private Vector3 HandleSteepWalls(Vector3 velocity)
+        {
+            Vector3 normal = CharachterControllerUtils.GetNormalWithSphereCast(_characterController, _groundLayer);
+            float angle = Vector3.Angle(normal, Vector3.up);
+            bool validAngle = angle <= _characterController.slopeLimit;
+
+            if (!validAngle && _verticalVelocity < 0f)
+                velocity = Vector3.ProjectOnPlane(velocity, normal);
+
+            return velocity;
+        }
 
         #region Late Update Logic
         private void LateUpdate()
@@ -248,7 +269,12 @@ namespace MTProject.PlayerController
 
         private bool IsGroundedWhileAirborne()
         {
-            return _characterController.isGrounded;
+            Vector3 normal = CharachterControllerUtils.GetNormalWithSphereCast(_characterController, _groundLayer);
+            float angle = Vector3.Angle(normal, Vector3.up);
+            print(angle);
+            bool validAngle = angle <= _characterController.slopeLimit;
+            
+            return _characterController.isGrounded && validAngle;
         }
 
         private bool CanRun()
